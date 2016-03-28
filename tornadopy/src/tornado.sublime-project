@@ -1,0 +1,28 @@
+{
+	"build_systems":
+	[
+		{
+			"file_regex": "^[ ]*File \"(...*?)\", line ([0-9]*)",
+			"name": "Anaconda Python Builder",
+			"selector": "source.python",
+			"shell_cmd": "\"/home/art/Desktop/test/tornadopy/bin/python2.7\" -u \"$file\""
+		}
+	],
+	"folders":
+	[
+		{
+			"path": "/home/art/Desktop/test/tornadopy/src"
+		}
+	],
+	"settings":
+	{
+		"FuzzyFilePath":
+		{
+		},
+		"python_interpreter": "/home/art/Desktop/test/tornadopy/bin/python2.7",
+		"python_package_paths":
+		[
+			"/home/art/Desktop/test/tornadopy/lib/python2.7/site-packages/tornado"
+		]
+	}
+}

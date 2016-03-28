@@ -1,0 +1,25 @@
+{
+	"build_systems":
+	[
+		{
+			"file_regex": "^[ ]*File \"(...*?)\", line ([0-9]*)",
+			"name": "Anaconda Python Builder",
+			"selector": "source.python",
+			"shell_cmd": "\"/home/art/Desktop/test/flask/bin/python3\" -u \"$file\""
+		}
+	],
+	"folders":
+	[
+		{
+			"path": "."
+		}
+	],
+	"settings":
+	{
+		"python_interpreter": "/home/art/Desktop/test/flask/bin/python3",
+		"python_package_paths":
+		[
+			"/home/art/Desktop/test/tornadopy/lib/python3.4/"
+		]
+	}
+}

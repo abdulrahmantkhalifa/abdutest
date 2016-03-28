@@ -1,0 +1,152 @@
+@usedefault
+
+@@title Cloud Space: ${name}
+
+{{cbspace id:$$id}}
+
+
+h2. Cloud Space: ${name}
+
+{{toc: start=3}}
+
+{% if status != "DESTROYED" %}
+
+
+
+{{actions:
+
+- display: Rename
+  action: /restmachine/cloudbroker/cloudspace/updateName
+  input:
+  - newname
+  data:
+   cloudspaceId: $$id
+
+- display: Delete CloudSpace
+  action: /restmachine/cloudbroker/cloudspace/destroy
+  data:
+   cloudspaceId: $$id
+   cloudspaceName: ${name}
+   accountname: ${accountname}
+  input:
+  - reason
+
+- display: Create Machine
+  action: '#createmachine'
+
+- display: Create Machine On Stack
+  action: '#createmachineonstack'
+
+- display: Move VFW
+  action: '#movevfw'
+
+- display: Deploy VFW
+  action: /restmachine/cloudbroker/cloudspace/deployVFW
+  input:
+  - reason
+  data:
+   cloudspaceId: $$id
+
+- display: Remove VFW
+  action: /restmachine/cloudbroker/cloudspace/destroyVFW
+  input:
+  - reason
+  data:
+   cloudspaceId: $$id
+
+- display: Reset VFW
+  action: /restmachine/cloudbroker/cloudspace/resetVFW
+  data:
+   cloudspaceId: $$id
+  input:
+  - reason
+
+- display: Grant User Access
+  hide: true
+  action: /restmachine/cloudbroker/cloudspace/addUser
+  data:
+   cloudspaceId: $$id
+  input:
+  - username
+  - name: accesstype
+    label: ACL
+    type: dropdown
+    values:
+     - label: Admin
+       value: ARCXDU
+     - label: Write
+       value: RCX
+     - label: Read
+       value: R
+
+- display: Revoke User Access
+  action: /restmachine/cloudbroker/cloudspace/deleteUser
+  hide: true
+  refresh: false
+  data:
+   cloudspaceId: $$id
+
+
+- display: Delete Portforwarding
+  action: /restmachine/cloudbroker/cloudspace/deletePortForward
+  hide: true
+  reload: false
+  data:
+   cloudspaceId: $$id
+
+#- display: Add Extra IP
+#  action: /restmachine/cloudbroker/cloudspace/addExtraIP
+#  data:
+#   cloudspaceId: $$id
+#  input:
+#  - ipaddress
+#  - reason
+
+#- display: Remove IP
+#  action: /restmachine/cloudbroker/cloudspace/removeIP
+#  data:
+#   cloudspaceId: $$id
+#  input:
+#  - ipaddress
+#  - reason
+
+}}
+
+{% endif %}
+
+{{createmachine: cloudspaceId:$$id}}
+{{movevfw: cloudspaceId:$$id}}
+{{createportforwarding: cloudspaceID:$$id}}
+
+h3. Details
+|*CloudSpace ID*|$$id|
+|*Account*|[${accountname}|account?id=${accountId}]|
+|*Network ID*|${networkid}|
+|*Defense Shield*| {{defenseshield: cloudspaceId:$$id}} |
+|*End User Portal*| [View Cloud Space|/wiki_gcb/MachineDeck#/list?cloudspaceId=${id}] |
+|*Status*|${status}|
+|*Location*|${location}|
+|*Description*|${descr}|
+|*Public IP Adress*|${publicipaddress}|
+|*Resource Limits*|${resourcelimits}|
+
+h3. Users Access
+{{action: id:'action-GrantUserAccess' class:'glyphicon glyphicon-plus margin-bottom-medium margin-left-medium' label:'Grant User Access'}}
+||User Name||ACL||Revoke Access||
+{% for ace in acl -%}
+    | [${ace.userGroupId}|/CBGrid/user?id=${ace.userGroupId}] |${ace.right}| {{action deleterow:true id:'action-RevokeUserAccess' data-username:'${ace.usergroupId}' class:'glyphicon glyphicon-remove'}}|
+{% endfor %}
+
+h3. Port Fowardings
+{{action: id:'action-createportforwarding' class:'glyphicon glyphicon-plus margin-bottom-medium margin-left-medium' label:'Create port Forward'}}
+
+||Source IP||Source Port||Destination IP||Destination Port||Delete||
+{% for rule in network.tcpForwardRules -%}
+|${rule.fromAddr}|${rule.fromPort}|${rule.toAddr}|${rule.toPort}|{{action: id:'action-DeletePortforwarding' deleterow:true class:'glyphicon glyphicon-remove' data-ruleId:'${loop.index -1}'}}|
+{% endfor %}
+
+h3. Virtual Machines
+{{action: id:'createmachine' class:'glyphicon glyphicon-plus margin-bottom-medium margin-left-medium' label:'Add Virtual Machine'}}
+{{action: id:'createmachineonstack' class:'glyphicon glyphicon-plus margin-bottom-medium margin-left-medium' label:'Add Virtual Machine on CPU node'}}
+
+{{vmachines cloudspaceid:$$id}}

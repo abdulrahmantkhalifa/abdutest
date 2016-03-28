@@ -1,0 +1,2 @@
+    def createPortForward(self, cloudspaceid, publicIp, publicPort, vmid, localPort, protocol=None, **kwargs):
+        return self.actors.portforwarding.create(cloudspaceid, publicIp, publicPort, vmid, localPort, protocol)

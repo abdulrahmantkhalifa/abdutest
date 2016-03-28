@@ -1,0 +1,32 @@
+#! /usr/bin/env python
+
+from wsgiref.simple_server import make_server
+import os
+def application (environ, start_response):
+    # import ipdb;ipdb.set_trace();
+    # f= open("environ.txt", "w")
+    # f.write(str(environ))
+    # f.close()
+
+
+    status = '200 OK'
+
+    stat = os.stat('Atlantis Nebula UHD.jpg')
+    stat.st_size
+    response_headers = [
+        ('Content-Type', 'image/jpg'),
+        ('Content-Disposition: attachment', 'filename="Atlantis Nebula UHD.jpg"'),
+        ('content-length', str(stat.st_size))
+    ]
+
+    start_response(status, response_headers)
+
+    return open ("Atlantis Nebula UHD.jpg", "r")
+
+
+# def middleware(environ, start_response):
+#   return application(environ, start_response)
+
+httpd= make_server("localhost", 5000, application)
+httpd.serve_forever()
+

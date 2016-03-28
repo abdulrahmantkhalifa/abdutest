@@ -1,0 +1,6 @@
+@usedefaults
+Welcome to your new space
+
+
+[System|/system]
+[how:/doc_jumpscale_howto/]
