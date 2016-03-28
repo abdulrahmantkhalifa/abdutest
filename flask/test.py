@@ -24,9 +24,12 @@ class user():
 def index():
     return redirect(url_for("login"))
 
-
+@app.route("/user/", methods=["POST", "GET", "DELETE"])
 @app.route("/user/<name>", methods=["POST", "GET", "DELETE"])
-def user_action(name):
+def user_action(name=None):
+    if request.form.get("name"):
+        name = request.form.get("name")
+
     if request.method == "POST":
         usi = user(request.form.get("name"), request.form.get("uni"))
         return jsonify(usi.json())
@@ -34,6 +37,7 @@ def user_action(name):
         if name in [x.strip(".json") for x in os.listdir("users")]:
             with open("users/%s.json" % name) as f:
                 return jsonify(json.load(f))
+
         return "SRRY NO USER WITH THAT NAMEi"
     else:
         if name in os.listdir("users"):
