@@ -5,29 +5,19 @@ import os
 app = Flask(__name__)
 
 
-# class users():
-#     def __init__(self):
-#         self.users = {}
-
-
-#     def add_user(self, username="johndoe", uni="guc"):
-
-#         self.username = username
-#         self.uni = uni
-
 class user():
+
     def __init__(self, username, uni):
         self.username = username
-        self.uni  = uni
+        self.uni = uni
         with open("users/%s.json" % username, "w") as f:
             json.dump(self.__dict__, f)
-    
+
     def __str__(self):
         return str(self.__dict__)
-    
+
     def json(self):
         return self.__dict__
-
 
 
 @app.route("/")
@@ -35,14 +25,13 @@ def index():
     return redirect(url_for("login"))
 
 
-
 @app.route("/user/<name>", methods=["POST", "GET", "DELETE"])
 def user_action(name):
     if request.method == "POST":
         usi = user(request.form.get("name"), request.form.get("uni"))
         return jsonify(usi.json())
-    elif request.methid == "GET":
-        if name in os.listdir("users"):
+    elif request.method == "GET":
+        if name in [x.strip(".json") for x in os.listdir("users")]:
             with open("users/%s.json" % name) as f:
                 return jsonify(json.load(f))
         return "SRRY NO USER WITH THAT NAMEi"
@@ -50,10 +39,11 @@ def user_action(name):
         if name in os.listdir("users"):
             os.remove("users/%s.json" % name)
 
+
 @app.route("/users")
 def users_action():
     if request.method == "GET":
-        return jsonify({"users": os.listdir("users")})
+        return jsonify({"users":[x.strip(".json") for x in os.listdir("users")]})
     else:
         return abort(405)
 
@@ -73,5 +63,5 @@ def page_not_found(error):
 #     return render_template("home.html", image=image)
 
 
-#if __name__=="__main__":
+# if __name__=="__main__":
 app.run(host="0.0.0.0", debug=True)
