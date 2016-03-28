@@ -39,11 +39,10 @@ def index():
 @app.route("/user/<name>", methods=["POST", "GET", "DELETE"])
 def user_action(name):
     if request.method == "POST":
-        usi = user(name, request.args.get("uni", )
-        print request.form.get("uni", "guc")
+        usi = user(request.form.get("name"), request.form.get("uni"))
         return jsonify(usi.json())
     elif request.methid == "GET":
-        if name inv os.listdir("users"):
+        if name in os.listdir("users"):
             with open("users/%s.json" % name) as f:
                 return jsonify(json.load(f))
         return "SRRY NO USER WITH THAT NAMEi"
